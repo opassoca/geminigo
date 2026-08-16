@@ -29,13 +29,31 @@ document.getElementById("keySave").addEventListener("click", () => {
 
 const overlay = document.getElementById("sheetOverlay");
 const sheet = document.getElementById("attachSheet");
-document.getElementById("attach").addEventListener("click", () => {
+const accountSheet = document.getElementById("accountSheet");
+
+function openSheet(el) {
   overlay.classList.remove("hidden");
-  sheet.classList.remove("hidden");
-});
-overlay.addEventListener("click", () => {
+  el.classList.remove("hidden");
+}
+function closeSheets() {
   overlay.classList.add("hidden");
   sheet.classList.add("hidden");
+  accountSheet.classList.add("hidden");
+}
+
+document.getElementById("attach").addEventListener("click", () => openSheet(sheet));
+overlay.addEventListener("click", closeSheets);
+
+document.getElementById("accountIcon").addEventListener("click", () => {
+  document.getElementById("accountKeyInput").value = "";
+  openSheet(accountSheet);
+});
+document.getElementById("accountKeySave").addEventListener("click", () => {
+  const val = document.getElementById("accountKeyInput").value.trim();
+  if (!val) return;
+  API_KEY = val;
+  localStorage.setItem("gemini_api_key", val);
+  closeSheets();
 });
 
 document.getElementById("fileInput").addEventListener("change", (e) => {
@@ -47,8 +65,7 @@ document.getElementById("fileInput").addEventListener("change", (e) => {
     msgInput.placeholder = "Arquivo anexado: " + file.name;
   };
   reader.readAsDataURL(file);
-  overlay.classList.add("hidden");
-  sheet.classList.add("hidden");
+  closeSheets();
 });
 
 const TOOLS = [{
