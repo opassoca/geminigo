@@ -7,6 +7,7 @@ const chat = document.getElementById("chat");
 const greeting = document.getElementById("greeting");
 const msgInput = document.getElementById("msg");
 let history = [];
+let pendingFile = null;
 
 function apiUrl() {
   return `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
@@ -16,10 +17,7 @@ function showChat() {
   keyScreen.classList.add("hidden");
   chatScreen.classList.remove("hidden");
 }
-
-if (API_KEY) {
-  showChat();
-}
+if (API_KEY) showChat();
 
 document.getElementById("keySave").addEventListener("click", () => {
   const val = document.getElementById("keyInput").value.trim();
@@ -29,34 +27,40 @@ document.getElementById("keySave").addEventListener("click", () => {
   showChat();
 });
 
+const overlay = document.getElementById("sheetOverlay");
+const sheet = document.getElementById("attachSheet");
+document.getElementById("attach").addEventListener("click", () => {
+  overlay.classList.remove("hidden");
+  sheet.classList.remove("hidden");
+});
+overlay.addEventListener("click", () => {
+  overlay.classList.add("hidden");
+  sheet.classList.add("hidden");
+});
+
+document.getElementById("fileInput").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    pendingFile = { mime: file.type || "application/octet-stream", data: reader.result.split(",")[1] };
+    msgInput.placeholder = "Arquivo anexado: " + file.name;
+  };
+  reader.readAsDataURL(file);
+  overlay.classList.add("hidden");
+  sheet.classList.add("hidden");
+});
+
 const TOOLS = [{
   function_declarations: [
-    {
-      name: "criar_alarme",
-      description: "Cria um alarme no dispositivo",
-      parameters: {
-        type: "object",
-        properties: {
-          hora: { type: "integer" },
-          minuto: { type: "integer" },
-          mensagem: { type: "string" }
-        },
-        required: ["hora", "minuto"]
-      }
-    },
-    {
-      name: "criar_evento",
-      description: "Cria um evento no calendario",
-      parameters: {
-        type: "object",
-        properties: {
-          titulo: { type: "string" },
-          inicio_epoch_ms: { type: "integer" },
-          fim_epoch_ms: { type: "integer" }
-        },
-        required: ["titulo", "inicio_epoch_ms", "fim_epoch_ms"]
-      }
-    }
+    { name: "criar_alarme", description: "Cria um alarme no dispositivo",
+      parameters: { type: "object", properties: {
+        hora: { type: "integer" }, minuto: { type: "integer" }, mensagem: { type: "string" }
+      }, required: ["hora", "minuto"] } },
+    { name: "criar_evento", description: "Cria um evento no calendario",
+      parameters: { type: "object", properties: {
+        titulo: { type: "string" }, inicio_epoch_ms: { type: "integer" }, fim_epoch_ms: { type: "integer" }
+      }, required: ["titulo", "inicio_epoch_ms", "fim_epoch_ms"] } }
   ]
 }];
 
@@ -88,10 +92,7 @@ async function callApi() {
     body: JSON.stringify({ contents: history, tools: TOOLS })
   });
   const data = await resp.json();
-  if (data.error) {
-    addBubble("erro API: " + data.error.message, false);
-    return;
-  }
+  if (data.error) { addBubble("erro API: " + data.error.message, false); return; }
   const cand = data.candidates[0].content;
   history.push(cand);
   for (const part of cand.parts) {
@@ -108,10 +109,17 @@ async function callApi() {
 
 async function sendMessage() {
   const text = msgInput.value.trim();
-  if (!text) return;
+  if (!text && !pendingFile) return;
+  const parts = [];
+  if (pendingFile) {
+    parts.push({ inline_data: { mime_type: pendingFile.mime, data: pendingFile.data } });
+    pendingFile = null;
+    msgInput.placeholder = "Peça ao Gemini Go...";
+  }
+  if (text) parts.push({ text });
   msgInput.value = "";
-  addBubble(text, true);
-  history.push({ role: "user", parts: [{ text }] });
+  addBubble(text || "[arquivo enviado]", true);
+  history.push({ role: "user", parts });
   try {
     await callApi();
   } catch (e) {

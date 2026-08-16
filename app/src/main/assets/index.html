@@ -13,14 +13,41 @@
 </div>
 
 <div id="chatScreen" class="hidden">
+  <div id="topbar">
+    <span class="icon">☰</span>
+    <span id="modelName">Gemini Go <span class="chev">▾</span></span>
+    <span class="icon">✎</span>
+    <span class="icon">⋯</span>
+  </div>
+
   <div id="greeting">Oi, o que você tem em mente?</div>
   <div id="chat"></div>
-  <div id="inputRow">
-    <button id="attach">+</button>
-    <input id="msg" placeholder="Pergunte algo...">
-    <button id="send">OK</button>
+  <div id="disclaimer">O Gemini Go é uma IA e pode cometer erros.</div>
+
+  <div id="inputPill">
+    <span id="attach" class="pillIcon">+</span>
+    <input id="msg" placeholder="Peça ao Gemini Go...">
+    <span class="pillIcon mic">🎤</span>
+    <span id="send" class="sendBtn">➤</span>
   </div>
 </div>
+
+<div id="sheetOverlay" class="hidden"></div>
+<div id="attachSheet" class="hidden">
+  <div id="sheetHandle"></div>
+  <div id="sheetGrid">
+    <label class="sheetItem">
+      <input type="file" id="fileInput" accept="image/*,application/pdf,text/plain" class="hidden">
+      <span class="sheetIcon">📎</span>
+      <span>Arquivos</span>
+    </label>
+    <div class="sheetItem" id="sheetCamera">
+      <span class="sheetIcon">📷</span>
+      <span>Câmera</span>
+    </div>
+  </div>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>
