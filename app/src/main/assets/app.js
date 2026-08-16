@@ -44,6 +44,33 @@ function closeSheets() {
 document.getElementById("attach").addEventListener("click", () => openSheet(sheet));
 overlay.addEventListener("click", closeSheets);
 
+const navOverlay = document.getElementById("navOverlay");
+const navDrawer = document.getElementById("navDrawer");
+document.getElementById("menuIcon").addEventListener("click", () => {
+  navOverlay.classList.remove("hidden");
+  navDrawer.classList.remove("hidden");
+  navDrawer.classList.add("open");
+});
+function closeDrawer() {
+  navDrawer.classList.remove("open");
+  navOverlay.classList.add("hidden");
+  setTimeout(() => navDrawer.classList.add("hidden"), 220);
+}
+navOverlay.addEventListener("click", closeDrawer);
+document.getElementById("navNewChat").addEventListener("click", () => {
+  history = [];
+  chat.innerHTML = "";
+  greeting.classList.remove("hidden");
+  closeDrawer();
+});
+document.getElementById("navGems").addEventListener("click", closeDrawer);
+document.getElementById("navSettings").addEventListener("click", () => {
+  closeDrawer();
+  document.getElementById("accountKeyInput").value = "";
+  openSheet(accountSheet);
+});
+document.getElementById("navHelp").addEventListener("click", closeDrawer);
+
 document.getElementById("accountIcon").addEventListener("click", () => {
   document.getElementById("accountKeyInput").value = "";
   openSheet(accountSheet);
