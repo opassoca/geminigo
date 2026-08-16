@@ -23,11 +23,12 @@
 
   <div id="greeting"><img id="sparkleIcon" src="icons/sparkle.svg"> Oi, o que você tem em mente?</div>
   <div id="chat"></div>
-  <div id="disclaimer">O Gemini Go é uma IA e pode cometer erros.</div>
+  <div id="disclaimer">O Gemini é uma IA e pode cometer erros.</div>
 
   <div id="inputPill">
     <span id="attach" class="pillIcon ripple"><img class="iconSvg" src="icons/plus.svg"></span>
     <input id="msg" placeholder="Peça ao Gemini Go...">
+    <span id="waitingSpinner" class="pillIcon hidden"><img class="iconSvg" src="icons/spinner.svg"></span>
     <span class="pillIcon mic ripple"><img class="iconSvg" src="icons/mic.svg"></span>
     <span id="send" class="sendBtn ripple"><img class="iconSvgSend" src="icons/send.svg"></span>
   </div>
@@ -51,18 +52,41 @@
 
 <div id="navOverlay" class="hidden"></div>
 <div id="navDrawer" class="hidden">
-  <div class="navHeader">Gemini Go</div>
+  <div class="navHeader">
+    <img class="iconSvg" src="icons/sparkle.svg"><span>Gemini Go</span>
+  </div>
+  <div class="navSearchWrap">
+    <img class="iconSvg navSearchIcon" src="icons/search.svg">
+    <input id="navSearch" placeholder="Pesquisar chats" autocomplete="off">
+  </div>
   <div class="navItem ripple" id="navNewChat"><img class="iconSvg" src="icons/add.svg"><span>Nova conversa</span></div>
   <div class="navItem ripple" id="navGems"><img class="iconSvg" src="icons/sparkle.svg"><span>Gems</span></div>
+
+  <div class="navSectionHeader hidden" id="pinnedHeader">Fixadas</div>
+  <div id="navPinnedList"></div>
+
+  <div class="navSectionHeader hidden" id="recentHeader">Recentes</div>
+  <div id="navRecentList"></div>
+
+  <div class="navDivider"></div>
   <div class="navItem ripple" id="navSettings"><img class="iconSvg" src="icons/settings.svg"><span>Configurações</span></div>
   <div class="navItem ripple" id="navHelp"><img class="iconSvg" src="icons/help_outline.svg"><span>Ajuda</span></div>
 </div>
 
 <div id="accountSheet" class="hidden">
-  <div id="accountAvatar"><img class="iconSvg" src="icons/account_circle.svg"></div>
-  <div id="accountLabel">API key ativa</div>
+  <div id="accountSheetHeader">
+    <div id="accountAvatar"><img class="iconSvg" src="icons/account_circle.svg"></div>
+    <div id="accountHeaderText">
+      <div id="accountName">Conta Gemini Go</div>
+      <div id="accountLabel">API key não configurada</div>
+    </div>
+  </div>
   <input id="accountKeyInput" placeholder="Colar nova API key">
   <button id="accountKeySave" class="ripple">Trocar chave</button>
+  <div class="accountDivider"></div>
+  <div class="actItem ripple" id="accountHelp"><img class="iconSvg" src="icons/help_outline.svg"><span>Ajuda</span></div>
+  <div class="actItem ripple" id="accountAbout"><img class="iconSvg" src="icons/sparkle.svg"><span>Sobre o Gemini Go</span></div>
+  <div class="actItem ripple" id="accountClose"><img class="iconSvg" src="icons/close.svg"><span>Fechar</span></div>
 </div>
 
 <div id="actionsSheet" class="hidden">

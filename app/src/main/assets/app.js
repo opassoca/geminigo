@@ -1,6 +1,9 @@
 const MODEL = "gemini-2.5-flash";
 let API_KEY = localStorage.getItem("gemini_api_key") || "";
 let conversationName = localStorage.getItem("gemini_conversation_name") || "Gemini Go";
+let conversations = JSON.parse(localStorage.getItem("geminigo_conversations") || "[]");
+let pinnedConvs = JSON.parse(localStorage.getItem("geminigo_pinned") || "[]");
+let currentConvId = null;
 
 const keyScreen = document.getElementById("keyScreen");
 const chatScreen = document.getElementById("chatScreen");
@@ -84,6 +87,7 @@ document.getElementById("menuIcon").addEventListener("click", () => {
   navOverlay.classList.remove("hidden");
   navDrawer.classList.remove("hidden");
   navDrawer.classList.add("open");
+  renderDrawerLists();
 });
 function closeDrawer() {
   navDrawer.classList.remove("open");
@@ -92,7 +96,86 @@ function closeDrawer() {
 }
 navOverlay.addEventListener("click", closeDrawer);
 
+// Persistencia de conversas
+function persistCurrentConversation() {
+  if (!currentConvId) {
+    currentConvId = "c" + Date.now();
+    conversations.unshift({ id: currentConvId, name: conversationName, updatedAt: Date.now() });
+  } else {
+    const c = conversations.find(c => c.id === currentConvId);
+    if (c) { c.name = conversationName; c.updatedAt = Date.now(); }
+  }
+  conversations.sort((a,b) => b.updatedAt - a.updatedAt);
+  localStorage.setItem("geminigo_conversations", JSON.stringify(conversations));
+}
+
+function openConversation(id) {
+  const c = conversations.find(c => c.id === id);
+  if (!c) return;
+  currentConvId = id;
+  conversationName = c.name;
+  history = [];
+  chat.innerHTML = "";
+  greeting.classList.remove("hidden");
+  localStorage.setItem("gemini_conversation_name", conversationName);
+  refreshModelName();
+  closeDrawer();
+}
+
+function pinConversation(id) {
+  if (pinnedConvs.includes(id)) {
+    pinnedConvs = pinnedConvs.filter(p => p !== id);
+  } else {
+    pinnedConvs.unshift(id);
+  }
+  localStorage.setItem("geminigo_pinned", JSON.stringify(pinnedConvs));
+  renderDrawerLists();
+}
+
+function renderDrawerLists(filter="") {
+  const pinnedEl = document.getElementById("navPinnedList");
+  const recentEl = document.getElementById("navRecentList");
+  const pinnedHeader = document.getElementById("pinnedHeader");
+  const recentHeader = document.getElementById("recentHeader");
+
+  const f = (filter || "").toLowerCase().trim();
+  const visible = conversations.filter(c => !f || c.name.toLowerCase().includes(f));
+  const pinned = visible.filter(c => pinnedConvs.includes(c.id));
+  const recent = visible.filter(c => !pinnedConvs.includes(c.id));
+
+  pinnedHeader.classList.toggle("hidden", pinned.length === 0);
+  recentHeader.classList.toggle("hidden", recent.length === 0);
+
+  function row(c, isPinned) {
+    const div = document.createElement("div");
+    div.className = "threadItem ripple" + (isPinned ? " pinned" : "");
+    div.innerHTML = '<img class="iconSvg" src="icons/' + (isPinned ? "sparkle" : "sparkle") + '.svg"><span class="threadText">' + escapeHtml(c.name) + '</span>';
+    div.addEventListener("click", () => openConversation(c.id));
+    div.addEventListener("contextmenu", (e) => { e.preventDefault(); pinConversation(c.id); });
+    div.title = "Toque para abrir / pressione e segure para fixar";
+    return div;
+  }
+  pinnedEl.innerHTML = "";
+  recentEl.innerHTML = "";
+  pinned.forEach(c => pinnedEl.appendChild(row(c, true)));
+  recent.forEach(c => recentEl.appendChild(row(c, false)));
+
+  if (visible.length === 0) {
+    recentEl.innerHTML = '<div class="threadItem empty" style="opacity:.6">' + (f ? "Nenhum chat encontrado" : "Nenhuma conversa ainda") + '</div>';
+  }
+  // re-aplica ripple aos novos elementos
+  document.querySelectorAll(".threadItem.ripple").forEach(addRippleEffect);
+}
+
+document.getElementById("navSearch").addEventListener("input", (e) => renderDrawerLists(e.target.value));
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m => ({ '&':'&','<':'<','>':'>','"':'"',"'":'&#39;' }[m]));
+}
+
 document.getElementById("navNewChat").addEventListener("click", () => {
+  if (history.length > 0) persistCurrentConversation();
+  currentConvId = null;
   history = [];
   chat.innerHTML = "";
   greeting.classList.remove("hidden");
@@ -110,10 +193,14 @@ document.getElementById("navGems").addEventListener("click", () => {
 
 document.getElementById("navSettings").addEventListener("click", () => {
   closeDrawer();
-  document.getElementById("accountKeyInput").value = "";
-  document.getElementById("accountLabel").textContent = API_KEY ? ("API key ativa: " + API_KEY.slice(0,8) + "...") : "Nenhuma API key";
-  openSheet(accountSheet);
+  openAccountSheet();
 });
+
+function openAccountSheet() {
+  document.getElementById("accountKeyInput").value = "";
+  document.getElementById("accountLabel").textContent = API_KEY ? ("API key ativa: " + API_KEY.slice(0,8) + "…") : "Nenhuma API key configurada";
+  openSheet(accountSheet);
+}
 
 document.getElementById("navHelp").addEventListener("click", () => {
   // Ação real: abre documentação do Gemini no navegador
@@ -125,19 +212,29 @@ document.getElementById("navHelp").addEventListener("click", () => {
   closeDrawer();
 });
 
-// === Account Sheet (trocar API key) ===
-document.getElementById("accountIcon").addEventListener("click", () => {
-  document.getElementById("accountKeyInput").value = "";
-  document.getElementById("accountLabel").textContent = API_KEY ? ("API key ativa: " + API_KEY.slice(0,8) + "...") : "Nenhuma API key";
-  openSheet(accountSheet);
-});
+// === Account Sheet (trocar API key + ajuda/sobre/fechar) ===
+document.getElementById("accountIcon").addEventListener("click", openAccountSheet);
 document.getElementById("accountKeySave").addEventListener("click", () => {
   const val = document.getElementById("accountKeyInput").value.trim();
   if (!val) return;
   API_KEY = val;
   localStorage.setItem("gemini_api_key", val);
   closeSheets();
+  addBotBubble("API key atualizada. Pronto para conversar.");
 });
+document.getElementById("accountHelp").addEventListener("click", () => {
+  if (typeof Android !== "undefined" && Android.abrirUrl) {
+    Android.abrirUrl("https://ai.google.dev/gemini-api/docs");
+  } else {
+    addBotBubble("Configure sua API key gratuita em aistudio.google.com/apikey");
+  }
+  closeSheets();
+});
+document.getElementById("accountAbout").addEventListener("click", () => {
+  closeSheets();
+  addBotBubble("Gemini Go v0.1 — clone fiel do app oficial Gemini, usando a Gemini API. Construído com Kotlin + WebView. Function calling ativo: alarme, evento, timer, lembrete, câmera e URLs.");
+});
+document.getElementById("accountClose").addEventListener("click", closeSheets);
 
 // === More (⋮) — ações da thread ===
 document.getElementById("moreIcon").addEventListener("click", () => {
@@ -243,6 +340,9 @@ function execFunction(name, args) {
 }
 
 async function callApi() {
+  const spinner = document.getElementById("waitingSpinner");
+  spinner.classList.remove("hidden");
+  try {
   const resp = await fetch(apiUrl(), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -263,11 +363,19 @@ async function callApi() {
       addBotBubble(part.text);
     }
   }
+  } finally { spinner.classList.add("hidden"); }
 }
 
 async function sendMessage() {
   const text = msgInput.value.trim();
   if (!text && !pendingFile) return;
+  // Na primeira mensagem: nomeia a conversa a partir do texto
+  if (!currentConvId && text && (conversationName === "Nova conversa" || conversationName === "Gemini Go")) {
+    conversationName = text.length > 28 ? text.slice(0, 28) + "…" : text;
+    refreshModelName();
+    localStorage.setItem("gemini_conversation_name", conversationName);
+  }
+  persistCurrentConversation();
   const parts = [];
   if (pendingFile) {
     parts.push({ inline_data: { mime_type: pendingFile.mime, data: pendingFile.data } });

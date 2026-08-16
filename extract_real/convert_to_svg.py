@@ -24,6 +24,8 @@ MAP = {
     "android_messages": "ic_android_messages_vd_theme_24",
     "sparkle":          "ic_auto_awesome_vd_theme_24",  # logo = auto_awesome
     "edit":             "ic_edit_vd_theme_24",
+    "arrow_back":       "ic_arrow_back_vd_theme_24",
+    "share":            "ic_share_vd_theme_24",
 }
 
 def parse_vector(xml_text):
