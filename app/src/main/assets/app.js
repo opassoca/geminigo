@@ -146,3 +146,23 @@ async function sendMessage() {
 
 document.getElementById("send").addEventListener("click", sendMessage);
 msgInput.addEventListener("keydown", (e) => { if (e.key === "Enter") sendMessage(); });
+
+function addRippleEffect(el) {
+  el.classList.add("ripple");
+  el.addEventListener("click", (e) => {
+    const rect = el.getBoundingClientRect();
+    const ripple = document.createElement("span");
+    ripple.className = "ripple-effect";
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + "px";
+    ripple.style.left = (e.clientX - rect.left - size / 2) + "px";
+    ripple.style.top = (e.clientY - rect.top - size / 2) + "px";
+    el.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 450);
+  });
+}
+["attach", "send", "accountIcon", "menuIcon", "moreIcon", "keySave", "accountKeySave", "sheetCamera"].forEach((id) => {
+  const el = document.getElementById(id);
+  if (el) addRippleEffect(el);
+});
+document.querySelectorAll(".sheetItem, .pillIcon").forEach(addRippleEffect);
