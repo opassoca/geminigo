@@ -1,1 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960.0 960.0" width="28.0dip" height="28.0dip"><path d="M167,510.38q-13.04,0-21.87-8.84t-8.82-21.9t8.82-21.86T167,449H449.62V166.69q0-13.04 8.84-21.87t21.9-8.82t21.86,8.82T511,166.69V449H793.31q13.04,0 21.87,8.84t8.82,21.9t-8.82,21.86t-21.87,8.79H511V793q0,13.04-8.84,21.87t-21.9,8.82t-21.86-8.82T449.62,793V510.38H167Z" fill="@android:color/white"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24.0 24.0" width="24" height="24">
+<path fill="currentColor" d="M20,13h-7v7h-2v-7H4v-2h7V4h2v7h7v2z"/>
+</svg>

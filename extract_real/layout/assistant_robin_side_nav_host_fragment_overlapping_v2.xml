@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.apps.search.assistant.surfaces.voice.robin.ui.sidenav.OverlappingDrawerLayout android:id="@id/assistant_robin_side_nav_host_overlapping_v2" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:layout_gravity="end" android:id="@id/assistant_robin_side_nav_host_content_container" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <FrameLayout android:layout_gravity="end" android:id="@id/assistant_robin_side_nav_host_scrim" android:background="#99000000" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" android:contentDescription="@string/assistant_robin_side_nav_scrim_a11y_description" />
+    <FrameLayout android:layout_gravity="start" android:id="@id/assistant_robin_side_nav_host_drawer_container" android:layout_width="@dimen/assistant_robin_side_nav_drawer_width" android:layout_height="fill_parent" />
+</com.google.android.apps.search.assistant.surfaces.voice.robin.ui.sidenav.OverlappingDrawerLayout>

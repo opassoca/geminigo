@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.apps.search.assistant.surfaces.voice.robin.ui.sidenav.SideBySideDrawerLayout android:id="@id/assistant_robin_side_nav_host_side_by_side" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout android:layout_gravity="start" android:id="@id/assistant_robin_side_nav_drawer" android:layout_width="@dimen/assistant_robin_side_nav_drawer_width" android:layout_height="fill_parent">
+        <FrameLayout android:id="@id/assistant_robin_side_nav_host_drawer_container" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+        <View android:layout_gravity="end" android:id="@id/assistant_robin_side_by_side_divider" android:background="?assistant_gem_colorOutlineLow" android:visibility="gone" android:layout_width="1.0dip" android:layout_height="fill_parent" />
+    </FrameLayout>
+    <FrameLayout android:layout_gravity="end" android:id="@id/assistant_robin_side_nav_host_content_container" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+</com.google.android.apps.search.assistant.surfaces.voice.robin.ui.sidenav.SideBySideDrawerLayout>

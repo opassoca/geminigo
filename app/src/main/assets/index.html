@@ -15,10 +15,10 @@
 
 <div id="chatScreen" class="hidden">
   <div id="topbar">
-    <span class="icon" id="menuIcon"><img class="iconSvg" src="icons/menu.svg"></span>
+    <span class="icon ripple" id="menuIcon"><img class="iconSvg" src="icons/menu.svg"></span>
     <span id="modelName">Gemini Go <span class="chev"><img class="chevSvg" src="icons/chevron_right.svg"></span></span>
-    <span class="icon" id="accountIcon"><img class="iconSvg" src="icons/edit.svg"></span>
-    <span class="icon" id="moreIcon"><img class="iconSvg" src="icons/more_vert.svg"></span>
+    <span class="icon ripple" id="accountIcon"><img class="iconSvg" src="icons/account_circle.svg"></span>
+    <span class="icon ripple" id="moreIcon"><img class="iconSvg" src="icons/more_vert.svg"></span>
   </div>
 
   <div id="greeting"><img id="sparkleIcon" src="icons/sparkle.svg"> Oi, o que você tem em mente?</div>
@@ -26,10 +26,10 @@
   <div id="disclaimer">O Gemini Go é uma IA e pode cometer erros.</div>
 
   <div id="inputPill">
-    <span id="attach" class="pillIcon"><img class="iconSvg" src="icons/plus.svg"></span>
+    <span id="attach" class="pillIcon ripple"><img class="iconSvg" src="icons/plus.svg"></span>
     <input id="msg" placeholder="Peça ao Gemini Go...">
-    <span class="pillIcon mic"><img class="iconSvg" src="icons/mic.svg"></span>
-    <span id="send" class="sendBtn"><img class="iconSvgSend" src="icons/send.svg"></span>
+    <span class="pillIcon mic ripple"><img class="iconSvg" src="icons/mic.svg"></span>
+    <span id="send" class="sendBtn ripple"><img class="iconSvgSend" src="icons/send.svg"></span>
   </div>
 </div>
 
@@ -37,12 +37,12 @@
 <div id="attachSheet" class="hidden">
   <div id="sheetHandle"></div>
   <div id="sheetGrid">
-    <label class="sheetItem">
+    <label class="sheetItem ripple">
       <input type="file" id="fileInput" accept="image/*,application/pdf,text/plain" class="hidden">
-      <span class="sheetIcon">📎</span>
+      <span class="sheetIcon"><img class="iconSvg" src="icons/plus.svg"></span>
       <span>Arquivos</span>
     </label>
-    <div class="sheetItem" id="sheetCamera">
+    <div class="sheetItem ripple" id="sheetCamera">
       <span class="sheetIcon"><img class="iconSvg" src="icons/camera.svg"></span>
       <span>Câmera</span>
     </div>
@@ -51,17 +51,35 @@
 
 <div id="navOverlay" class="hidden"></div>
 <div id="navDrawer" class="hidden">
-  <div class="navItem" id="navNewChat"><img class="iconSvg" src="icons/add.svg"><span>Nova conversa</span></div>
-  <div class="navItem" id="navGems"><img class="iconSvg" src="icons/gems.svg"><span>Gems</span></div>
-  <div class="navItem" id="navSettings"><img class="iconSvg" src="icons/settings.svg"><span>Configurações</span></div>
-  <div class="navItem" id="navHelp"><img class="iconSvg" src="icons/help.svg"><span>Ajuda</span></div>
+  <div class="navHeader">Gemini Go</div>
+  <div class="navItem ripple" id="navNewChat"><img class="iconSvg" src="icons/add.svg"><span>Nova conversa</span></div>
+  <div class="navItem ripple" id="navGems"><img class="iconSvg" src="icons/sparkle.svg"><span>Gems</span></div>
+  <div class="navItem ripple" id="navSettings"><img class="iconSvg" src="icons/settings.svg"><span>Configurações</span></div>
+  <div class="navItem ripple" id="navHelp"><img class="iconSvg" src="icons/help_outline.svg"><span>Ajuda</span></div>
 </div>
 
 <div id="accountSheet" class="hidden">
-  <div id="accountAvatar">🔑</div>
+  <div id="accountAvatar"><img class="iconSvg" src="icons/account_circle.svg"></div>
   <div id="accountLabel">API key ativa</div>
   <input id="accountKeyInput" placeholder="Colar nova API key">
-  <button id="accountKeySave">Trocar chave</button>
+  <button id="accountKeySave" class="ripple">Trocar chave</button>
+</div>
+
+<div id="actionsSheet" class="hidden">
+  <div class="actItem ripple" id="actRename"><img class="iconSvg" src="icons/edit.svg"><span>Renomear conversa</span></div>
+  <div class="actItem ripple" id="actDelete"><img class="iconSvg" src="icons/delete.svg"><span>Excluir conversa</span></div>
+  <div class="actItem ripple" id="actClose"><img class="iconSvg" src="icons/close.svg"><span>Cancelar</span></div>
+</div>
+
+<div id="renameOverlay" class="hidden">
+  <div id="renameDialog">
+    <div id="renameTitle">Renomear conversa</div>
+    <input id="renameInput" placeholder="Nome da conversa">
+    <div class="renameBtns">
+      <button id="renameCancel" class="ripple">Cancelar</button>
+      <button id="renameOk" class="ripple">OK</button>
+    </div>
+  </div>
 </div>
 
 <script src="app.js"></script>

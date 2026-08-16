@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.apps.search.assistant.surfaces.voice.robin.ui.sidenav.ViewPagerDrawerLayout android:id="@id/assistant_robin_side_nav_host_viewpager_container" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.viewpager2.widget.ViewPager2 android:orientation="horizontal" android:id="@id/assistant_robin_side_nav_viewpager" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+</com.google.android.apps.search.assistant.surfaces.voice.robin.ui.sidenav.ViewPagerDrawerLayout>

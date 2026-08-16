@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView android:id="@id/assistant_robin_bottomsheet_handle" android:layout_width="fill_parent" android:layout_height="48.0dip" />
+    <TextView android:textAppearance="?assistant_textAppearanceTitleMedium" android:textColor="?colorOnSurface" android:id="@id/assistant_robin_companion_single_picker_title" android:paddingBottom="8.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/assistant_gem_sys_spacing_l" android:paddingEnd="@dimen/assistant_gem_sys_spacing_m" />
+    <android.support.v7.widget.RecyclerView android:orientation="vertical" android:id="@id/assistant_robin_companion_single_picker_list" android:layout_width="fill_parent" android:layout_height="wrap_content" app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+</LinearLayout>
