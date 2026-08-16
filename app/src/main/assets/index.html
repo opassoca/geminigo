@@ -5,12 +5,21 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="greeting">Oi, o que você tem em mente?</div>
-<div id="chat"></div>
-<div id="inputRow">
-  <button id="attach">+</button>
-  <input id="msg" placeholder="Pergunte algo...">
-  <button id="send">OK</button>
+<div id="keyScreen">
+  <div id="keyTitle">Cole sua API key do Gemini</div>
+  <input id="keyInput" placeholder="AIza...">
+  <button id="keySave">Salvar e continuar</button>
+  <div id="keyHint">Gere em aistudio.google.com/apikey</div>
+</div>
+
+<div id="chatScreen" class="hidden">
+  <div id="greeting">Oi, o que você tem em mente?</div>
+  <div id="chat"></div>
+  <div id="inputRow">
+    <button id="attach">+</button>
+    <input id="msg" placeholder="Pergunte algo...">
+    <button id="send">OK</button>
+  </div>
 </div>
 <script src="app.js"></script>
 </body>

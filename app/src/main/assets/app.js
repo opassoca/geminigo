@@ -1,11 +1,33 @@
-const API_KEY = "COLE_SUA_KEY_AQUI";
 const MODEL = "gemini-2.5-flash";
-const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+let API_KEY = localStorage.getItem("gemini_api_key") || "";
 
+const keyScreen = document.getElementById("keyScreen");
+const chatScreen = document.getElementById("chatScreen");
 const chat = document.getElementById("chat");
 const greeting = document.getElementById("greeting");
 const msgInput = document.getElementById("msg");
 let history = [];
+
+function apiUrl() {
+  return `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+}
+
+function showChat() {
+  keyScreen.classList.add("hidden");
+  chatScreen.classList.remove("hidden");
+}
+
+if (API_KEY) {
+  showChat();
+}
+
+document.getElementById("keySave").addEventListener("click", () => {
+  const val = document.getElementById("keyInput").value.trim();
+  if (!val) return;
+  API_KEY = val;
+  localStorage.setItem("gemini_api_key", val);
+  showChat();
+});
 
 const TOOLS = [{
   function_declarations: [
@@ -60,12 +82,16 @@ function execFunction(name, args) {
 }
 
 async function callApi() {
-  const resp = await fetch(URL, {
+  const resp = await fetch(apiUrl(), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ contents: history, tools: TOOLS })
   });
   const data = await resp.json();
+  if (data.error) {
+    addBubble("erro API: " + data.error.message, false);
+    return;
+  }
   const cand = data.candidates[0].content;
   history.push(cand);
   for (const part of cand.parts) {
